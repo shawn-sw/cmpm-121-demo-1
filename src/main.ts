@@ -25,32 +25,76 @@ gameDiv.append(count);
 // mushroom count
 let mushroom = 0;
 
-// add button
-const bookButton: HTMLButtonElement = document.createElement("button");
-bookButton.innerHTML = "Collect 🍄";
-bookButton.id = "bookButton";
-gameDiv.append(bookButton);
+const globalRate = {
+  rate: 0,
+  setRate() {
+    const rateArr = upgradeButtons.map(
+      (button) => button.amount * button.growthRate
+    );
+    this.rate = rateArr.reduce((a, b) => a + b, 0);
+  },
+};
 
-// add event listener
-bookButton.addEventListener("click", () => {
-  incrementMushroom(1); // click +1
+class Upgrade {
+  public text: string;
+  public cost: number;
+  public growthRate: number;
+  public amount: number;
+  public button: HTMLButtonElement;
+
+  constructor(text: string, cost: number, growthRate: number) {
+    this.text = text;
+    this.cost = cost;
+    this.amount = 0;
+    this.growthRate = growthRate;
+    this.button = document.createElement("button");
+    this.button.innerHTML = `${this.text}<br>(${this.cost} mushrooms)`;
+    this.button.addEventListener("click", () => {
+      if (mushroom >= this.cost) {
+        mushroom -= this.cost;
+        this.purchase();
+        globalRate.setRate();
+        updateMushroomDisplay();
+      }
+    });
+  }
+  purchase(): void {
+    this.amount++;
+  }
+}
+
+// add button
+const upgradeButtons: Upgrade[] = [];
+upgradeButtons.push(new Upgrade("Baby Bella", 10, 1 / 60));
+upgradeButtons.push(new Upgrade("shiitake", 100, 10 / 60));
+upgradeButtons.push(new Upgrade("Chanterelle", 1000, 100 / 60));
+
+upgradeButtons.forEach((button) => {
+  gameDiv.append(button.button);
+  button.button.hidden = true;
 });
 
-// add function to update mushroom number
-function incrementMushroom(val: number = 1) {
-  mushroom += val;
-  count.innerHTML = `Count: ${mushroom.toFixed(2)}<br><br>`;
+function checkShowUpgrades(): void {
+  upgradeButtons.forEach((button) => {
+    button.button.hidden = mushroom < button.cost;
+  });
+  window.requestAnimationFrame(checkShowUpgrades);
 }
 
-let start = performance.now();
-function continuousGrowth() {
-  const now = performance.now();
-  if (now - start > 1000 / 60) {
-    incrementMushroom(1 / 60); // add 1/60
-    start = now;
-  }
-  window.requestAnimationFrame(continuousGrowth);
+window.requestAnimationFrame(checkShowUpgrades);
+
+function updateMushroomDisplay(): void {
+  count.innerHTML = `Mushroom: ${mushroom.toFixed(2)}<br><br>`;
 }
 
-// start
+let lastTime = performance.now();
+
+function continuousGrowth(currentTime: number) {
+  const deltaTime = (currentTime - lastTime) / 1000;
+  mushroom += globalRate.rate * deltaTime; 
+  updateMushroomDisplay();
+  lastTime = currentTime; 
+  window.requestAnimationFrame(continuousGrowth); 
+}
+
 window.requestAnimationFrame(continuousGrowth);
