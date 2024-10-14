@@ -5,17 +5,17 @@ const app: HTMLDivElement = document.querySelector("#app")!;
 const gameName = "Mushroom Forest";
 document.title = gameName;
 
-// 创建标题
+// add title
 const header = document.createElement("h1");
 header.innerHTML = gameName;
 app.append(header);
 
-// 创建游戏计数器容器
+// add counter
 const gameDiv: HTMLDivElement = document.createElement("div");
 gameDiv.id = "gameCounter";
 app.append(gameDiv);
 
-// 创建计数显示区域
+// add count display
 const count: HTMLDivElement = document.createElement("div");
 count.id = "count";
 count.innerHTML = "Count: 0<br><br>";
@@ -42,7 +42,15 @@ function incrementMushroom(val: number = 1) {
   count.innerHTML = `Count: ${mushroom.toFixed(2)}<br><br>`;
 }
 
-// increase by time
-setInterval(() => {
-  incrementMushroom(1 / 60);
-}, 1000 / 60);
+let start = performance.now();
+function continuousGrowth() {
+  const now = performance.now();
+  if (now - start > 1000 / 60) {
+    incrementMushroom(1 / 60); // add 1/60
+    start = now;
+  }
+  window.requestAnimationFrame(continuousGrowth);
+}
+
+// start
+window.requestAnimationFrame(continuousGrowth);
