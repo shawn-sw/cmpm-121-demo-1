@@ -65,6 +65,14 @@ class Upgrade {
 }
 
 // add button
+const bookButton: HTMLButtonElement = document.createElement("button");
+bookButton.innerHTML = "Collect 🍄";
+bookButton.id = "bookButton";
+gameDiv.append(bookButton);
+// add event listener
+bookButton.addEventListener("click", () => {
+  incrementMushroom(1); // click +1
+  
 const upgradeButtons: Upgrade[] = [];
 upgradeButtons.push(new Upgrade("Baby Bella", 10, 1 / 60));
 upgradeButtons.push(new Upgrade("shiitake", 100, 10 / 60));
