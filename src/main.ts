@@ -55,6 +55,7 @@ class Upgrade {
         this.purchase();
         globalRate.setRate();
         updateMushroomDisplay();
+        checkShowUpgrades();
       }
     });
   }
