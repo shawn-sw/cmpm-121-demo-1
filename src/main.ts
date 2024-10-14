@@ -14,4 +14,3 @@ app.append(header);
 const bookButton: HTMLButtonElement = document.createElement("button");
 bookButton.innerHTML = "Collect 🍄";
 bookButton.id = "bookButton";
-gameDiv.append(bookButton);
