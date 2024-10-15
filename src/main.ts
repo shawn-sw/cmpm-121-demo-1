@@ -41,7 +41,7 @@ mainButton.addEventListener("click", () => {
 // add function to update mushroom number
 function incrementMushroom(val: number = 1) {
   mushroom += val;
-  count.innerHTML = `Count: ${mushroom.toFixed(2)}<br><br>`;
+  count.innerHTML = `Count: $ {mushroom.toFixed(2)}<br><br>`;
   globalGrowth.setGrowth();
 }
 
@@ -64,12 +64,12 @@ interface Item {
 }
 
 const availableItems: Item[] = [
-  { name: "Mushroom_A", price: 10, growth: 0.1, description:"pickup mushroom a"},
-  { name: "Mushroom_B", price: 100, growth: 2, description:"pickup mushroom b" },
-  { name: "Mushroom_C", price: 1000, growth: 50, description:"pickup mushroom c" },
-  { name: "Mushroom_D", price: 10000, growth: 1000, description:"pickup mushroom d" },
-  { name: "Mushroom_E", price: 100000, growth: 20000, description:"pickup mushroom e" },
-  { name: "Mushroom_F", price: 1000000, growth: 500000, description:"pickup mushroom f" },
+  { name: "Meadow", price: 10, growth: 0.1, description:"growth 0.1 munshrooms per second"},
+  { name: "Forest", price: 100, growth: 2, description:"growth 2 munshrooms per second" },
+  { name: "Cave", price: 1000, growth: 50, description:"growth 50 munshrooms per second" },
+  { name: "Greenhouse", price: 10000, growth: 1000, description:"growth 1000 munshrooms per second" },
+  { name: "Swamp", price: 100000, growth: 20000, description:"growth 20000 munshrooms per second" },
+  { name: "Underground Lab", price: 1000000, growth: 500000, description:"growth 500000 munshrooms per second" },
 ];
 
 const upgradeButtons: Upgrade[] = [];
