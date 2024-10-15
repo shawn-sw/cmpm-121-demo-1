@@ -41,7 +41,7 @@ mainButton.addEventListener("click", () => {
 // add function to update mushroom number
 function incrementMushroom(val: number = 1) {
   mushroom += val;
-  count.innerHTML = `Count: $ {mushroom.toFixed(2)}<br><br>`;
+  count.innerHTML = `Count: $${mushroom.toFixed(2)}<br><br>`;
   globalGrowth.setGrowth();
 }
 
