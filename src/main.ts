@@ -80,6 +80,7 @@ class Upgrade {
         this.button.innerHTML = `${this.text}<br>(${this.cost})`;
         this.button.addEventListener("click", () => {
             mushroom -= this.cost;
+            this.cost *= 1.15;
             this.purchase();
             globalRate.setRate();
         });
@@ -106,9 +107,9 @@ function checkShowUpgrades(): void {
         } else {  
           button.button.hidden = false;
           hidCount = 1;
-            button.button.innerHTML = `${button.text}<br>(${button.cost})<br> Owned:${
+            button.button.innerHTML = `${button.text}<br>(${button.cost.toFixed(2)})<br> Owned:${
               button.amount
-            } @ ${button.growthRate * button.amount}/s`;
+            } @ ${(button.growthRate * button.amount).toFixed(2)}/s`;
         }
     });
     window.requestAnimationFrame(checkShowUpgrades);
