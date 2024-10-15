@@ -48,28 +48,28 @@ function incrementMushroom(val: number = 1) {
 let start = Date.now();
 function continuousGrowth() {
   const now = Date.now();
-  if (now - start > (1 / 60) * 1000) {
-    incrementMushroom(globalGrowth.growth);
-    window.requestAnimationFrame(continuousGrowth);
+  const elapsed: number = now - start;
+    incrementMushroom(globalGrowth.growth * (elapsed / 1000));
     start = now;
-  }else{
     window.requestAnimationFrame(continuousGrowth);
   }
-}
+  window.requestAnimationFrame(continuousGrowth);
+
 
 interface Item {
   name: string;
   price: number;
   growth: number;
+  description: string;
 }
 
 const availableItems: Item[] = [
-  { name: "Mushroom_A", price: 10, growth: 0.1, "pickup mushroom a"},
-  { name: "Mushroom_B", price: 100, growth: 2, "pickup mushroom b" },
-  { name: "Mushroom_C", price: 1000, growth: 50, "pickup mushroom c" },
-  { name: "Mushroom_D", price: 10000, growth: 1000, "pickup mushroom d" },
-  { name: "Mushroom_E", price: 100000, growth: 20000, "pickup mushroom e" },
-  { name: "Mushroom_F", price: 1000000, growth: 500000, "pickup mushroom f" },
+  { name: "Mushroom_A", price: 10, growth: 0.1, description:"pickup mushroom a"},
+  { name: "Mushroom_B", price: 100, growth: 2, description:"pickup mushroom b" },
+  { name: "Mushroom_C", price: 1000, growth: 50, description:"pickup mushroom c" },
+  { name: "Mushroom_D", price: 10000, growth: 1000, description:"pickup mushroom d" },
+  { name: "Mushroom_E", price: 100000, growth: 20000, description:"pickup mushroom e" },
+  { name: "Mushroom_F", price: 1000000, growth: 500000, description:"pickup mushroom f" },
 ];
 
 const upgradeButtons: Upgrade[] = [];
@@ -107,8 +107,8 @@ class Upgrade {
         this.tips.classList.add("tips");
         this.tips.textContent = this.description;
       
-        this.button.addEventListener("mouseover", this.showTooltip.bind(this));
-        this.button.addEventListener("mouseout", this.hideTooltip.bind(this));
+        this.button.addEventListener("mouseover", this.showTips.bind(this));
+        this.button.addEventListener("mouseout", this.hideTips.bind(this));
     }
   
     purchase(): void{
@@ -134,13 +134,12 @@ class Upgrade {
       }
     }
   
-  }
-  updateButtonText(): void {
-    this.button.innerHTML = `${this.name}<br>
-    Price: ${this.price.toFixed(2)}<br>
-    Owned: ${this.amount}<br>
-    ${(this.growth * this.amount).toFixed(2)}/s`;
-  }
+    updateButtonText(): void {
+      this.button.innerHTML = `${this.name}<br>
+      Price: ${this.price.toFixed(2)}<br>
+      Owned: ${this.amount}<br>
+      ${(this.growth * this.amount).toFixed(2)}/s`;
+    }
 } 
 
 availableItems.forEach((item) => {
