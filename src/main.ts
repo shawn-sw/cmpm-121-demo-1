@@ -44,9 +44,9 @@ function incrementMushroom(val: number = 1) {
   count.innerHTML = `Count: ${mushroom.toFixed(2)}<br><br>`;
 }
 
-let start = performance.now();
+let start = Date.now();
 function continuousGrowth() {
-  const now = performance.now();
+  const now = Date.now();
   if (now - start > (1 / 60) * 1000) {
     incrementMushroom(globalRate.rate);
     window.requestAnimationFrame(continuousGrowth);
