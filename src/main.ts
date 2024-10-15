@@ -26,13 +26,15 @@ gameDiv.append(count);
 let mushroom = 0;
 
 // add button
-const bookButton: HTMLButtonElement = document.createElement("button");
-bookButton.innerHTML = "Collect 🍄";
-bookButton.id = "bookButton";
-gameDiv.append(bookButton);
+const mainButton: HTMLButtonElement = document.createElement("button");
+mainButton.innerHTML = "Collect 🍄";
+mainButton.id = "mainButton";
+mainButton.style.fontSize = "100px";
+mainButton.style.width = "600px";
+gameDiv.append(mainButton);
 
 // add event listener
-bookButton.addEventListener("click", () => {
+mainButton.addEventListener("click", () => {
   incrementMushroom(1); // click +1
 });
 
@@ -78,15 +80,14 @@ class Upgrade {
         this.growthRate = growthRate;
         this.button = document.createElement("button");
         this.button.innerHTML = `${this.text}<br>(${this.cost})`;
-        this.button.addEventListener("click", () => {
-            mushroom -= this.cost;
-            this.cost *= 1.15;
-            this.purchase();
-            globalRate.setRate();
-        });
+        this.button.addEventListener("click", this.purchase.bind(this));
+        this.button.style.width = "600px";
     }
     purchase(): void{
-        this.amount++;
+      score -= this.cost;
+      this.cost *= 1.15;
+      globalRate.setRate();
+      this.amount++;
     }
 }
 upgradeButtons.push(new Upgrade("mashroom_A", 10, 0.1));
@@ -96,20 +97,18 @@ window.requestAnimationFrame(continuousGrowth);
 
 upgradeButtons.forEach((button) => {
     gameDiv.append(button.button);
-    button.button.hidden = true;
+    button.button.disabled = true;
 });
 
-let hidCount = 0;
 function checkShowUpgrades(): void {
     upgradeButtons.forEach((button) => {
-        if (mushroom < button.cost && hidCount == 0) {
-            button.button.hidden = true;
+        if (mushroom < button.cost) {
+            button.button.disabled = true;
         } else {  
-          button.button.hidden = false;
-          hidCount = 1;
+          button.button.disabled = false;
             button.button.innerHTML = `${button.text}<br>(${button.cost.toFixed(2)})<br> Owned:${
               button.amount
-            } @ ${(button.growthRate * button.amount).toFixed(2)}/s`;
+            } <br> ${(button.growthRate * button.amount).toFixed(2)}/s`;
         }
     });
     window.requestAnimationFrame(checkShowUpgrades);
