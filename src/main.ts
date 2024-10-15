@@ -42,13 +42,14 @@ mainButton.addEventListener("click", () => {
 function incrementMushroom(val: number = 1) {
   mushroom += val;
   count.innerHTML = `Count: ${mushroom.toFixed(2)}<br><br>`;
+  globalGrowth.setGrowth();
 }
 
 let start = Date.now();
 function continuousGrowth() {
   const now = Date.now();
   if (now - start > (1 / 60) * 1000) {
-    incrementMushroom(globalRate.rate);
+    incrementMushroom(globalGrowth.growth);
     window.requestAnimationFrame(continuousGrowth);
     start = now;
   }else{
@@ -56,62 +57,78 @@ function continuousGrowth() {
   }
 }
 
+interface Item {
+  name: string;
+  price: number;
+  growth: number;
+}
+
+const availableItems: Item[] = [
+  { name: "Mushroom_A", price: 10, growth: 0.1 },
+  { name: "Mushroom_B", price: 100, growth: 2 },
+  { name: "Mushroom_C", price: 1000, growth: 50 },
+];
+
 const upgradeButtons: Upgrade[] = [];
-const globalRate = {
-    rate: 0,
-    setRate() {
-        const rateArr = upgradeButtons.map((button) => {
-            return button.amount * button.growthRate;
+const globalGrowth = {
+    growth: 0,
+    setGrowth() {
+        const growthArr = upgradeButtons.map((button) => {
+            return button.amount * button.growth;
         });
-        this.rate = rateArr.reduce((a, b) => a + b);
+        this.growth = growthArr.reduce((a, b) => a + b, 0);
     }
 }
 
 class Upgrade {
-    public text: string;
-    public cost: number;
-    public growthRate: number;
+    public name: string;
+    public price: number;
+    public growth: number;
     public amount: number;
     public button: HTMLButtonElement;
-    constructor(text: string, cost: number, growthRate: number) {
-        this.text = text;
-        this.cost = cost;
+  
+    constructor(item: Item) {
+        this.name = item.name;
+        this.price = item.price;
         this.amount = 0;
-        this.growthRate = growthRate;
+        this.growth = item.growth;
         this.button = document.createElement("button");
-        this.button.innerHTML = `${this.text}<br>(${this.cost})`;
+        this.updateButtonText();
         this.button.addEventListener("click", this.purchase.bind(this));
-        this.button.style.width = "600px";
+        this.button.style.width = "200px";
     }
+  
     purchase(): void{
-      mushroom -= this.cost;
-      this.cost *= 1.15;
-      globalRate.setRate();
+      if (mushroom >= this.price) {
+      mushroom -= this.price;
       this.amount++;
-    }
-}
-upgradeButtons.push(new Upgrade("mashroom_A", 10, 0.1));
-upgradeButtons.push(new Upgrade("mashroom_B", 100, 2.0));
-upgradeButtons.push(new Upgrade("mashroom_C", 1000, 50));
-window.requestAnimationFrame(continuousGrowth);
+      this.price *= 1.15;
+      globalGrowth.setGrowth();
+      this.updateButtonText();
+      }
+  }
+  updateButtonText(): void {
+    this.button.innerHTML = `${this.name}<br>
+    Price: ${this.price.toFixed(2)}<br>
+    Owned: ${this.amount}<br>
+    ${(this.growth * this.amount).toFixed(2)}/s`;
+  }
+} 
 
-upgradeButtons.forEach((button) => {
-    gameDiv.append(button.button);
-    button.button.disabled = true;
+availableItems.forEach((item) => {
+  const upgrade = new Upgrade(item);
+  upgradeButtons.push(upgrade);
+  gameDiv.append(upgrade.button);
+  upgrade.button.disabled = true;
 });
 
 function checkShowUpgrades(): void {
     upgradeButtons.forEach((button) => {
-        if (mushroom < button.cost) {
-            button.button.disabled = true;
-        } else {  
-          button.button.disabled = false;
-            button.button.innerHTML = `${button.text}<br>(${button.cost.toFixed(2)})<br> Owned:${
-              button.amount
-            } <br> ${(button.growthRate * button.amount).toFixed(2)}/s`;
-        }
+      button.button.disabled = mushroom < button.price;
+      button.updateButtonText();
     });
     window.requestAnimationFrame(checkShowUpgrades);
 }
 
+window.requestAnimationFrame(continuousGrowth);
 window.requestAnimationFrame(checkShowUpgrades);
