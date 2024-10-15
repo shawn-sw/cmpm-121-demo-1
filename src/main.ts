@@ -88,21 +88,27 @@ class Upgrade {
         this.amount++;
     }
 }
-upgradeButtons.push(new Upgrade("mashroom_A", 10, 1/60));
-upgradeButtons.push(new Upgrade("mashroom_B", 100, 10/60));
-upgradeButtons.push(new Upgrade("mashroom_C", 1000, 100/60));
+upgradeButtons.push(new Upgrade("mashroom_A", 10, 0.1));
+upgradeButtons.push(new Upgrade("mashroom_B", 100, 2.0));
+upgradeButtons.push(new Upgrade("mashroom_C", 1000, 50));
 window.requestAnimationFrame(continuousGrowth);
 
 upgradeButtons.forEach((button) => {
     gameDiv.append(button.button);
     button.button.hidden = true;
 });
+
+let hidCount = 0;
 function checkShowUpgrades(): void {
     upgradeButtons.forEach((button) => {
-        if (mushroom >= button.cost) {
-            button.button.hidden = false;
-        } else {
+        if (mushroom < button.cost && hidCount == 0) {
             button.button.hidden = true;
+        } else {  
+          button.button.hidden = false;
+          hidCount = 1;
+            button.button.innerHTML = `${button.text}<br>(${button.cost})<br> Owned:${
+              button.amount
+            } @ ${button.growthRate * button.amount}/s`;
         }
     });
     window.requestAnimationFrame(checkShowUpgrades);
