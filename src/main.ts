@@ -64,9 +64,12 @@ interface Item {
 }
 
 const availableItems: Item[] = [
-  { name: "Mushroom_A", price: 10, growth: 0.1 },
-  { name: "Mushroom_B", price: 100, growth: 2 },
-  { name: "Mushroom_C", price: 1000, growth: 50 },
+  { name: "Mushroom_A", price: 10, growth: 0.1, "pickup mushroom a"},
+  { name: "Mushroom_B", price: 100, growth: 2, "pickup mushroom b" },
+  { name: "Mushroom_C", price: 1000, growth: 50, "pickup mushroom c" },
+  { name: "Mushroom_D", price: 10000, growth: 1000, "pickup mushroom d" },
+  { name: "Mushroom_E", price: 100000, growth: 20000, "pickup mushroom e" },
+  { name: "Mushroom_F", price: 1000000, growth: 500000, "pickup mushroom f" },
 ];
 
 const upgradeButtons: Upgrade[] = [];
@@ -85,6 +88,8 @@ class Upgrade {
     public price: number;
     public growth: number;
     public amount: number;
+    public description: string;
+    private tips: HTMLDivElement;
     public button: HTMLButtonElement;
   
     constructor(item: Item) {
@@ -92,10 +97,18 @@ class Upgrade {
         this.price = item.price;
         this.amount = 0;
         this.growth = item.growth;
+        this.description = item.description;
         this.button = document.createElement("button");
         this.updateButtonText();
         this.button.addEventListener("click", this.purchase.bind(this));
         this.button.style.width = "200px";
+
+        this.tips = document.createElement("div");
+        this.tips.classList.add("tips");
+        this.tips.textContent = this.description;
+      
+        this.button.addEventListener("mouseover", this.showTooltip.bind(this));
+        this.button.addEventListener("mouseout", this.hideTooltip.bind(this));
     }
   
     purchase(): void{
@@ -106,6 +119,21 @@ class Upgrade {
       globalGrowth.setGrowth();
       this.updateButtonText();
       }
+    }
+
+    showTips(event: MouseEvent): void {
+      const tooltipOffset = 10;
+      this.tips.style.left = `${event.clientX + tooltipOffset}px`;
+      this.tips.style.top = `${event.clientY + tooltipOffset}px`;
+      document.body.appendChild(this.tips);
+    }
+  
+    hideTips(): void {
+      if (this.tips.parentElement) {
+        this.tips.parentElement.removeChild(this.tips);
+      }
+    }
+  
   }
   updateButtonText(): void {
     this.button.innerHTML = `${this.name}<br>
