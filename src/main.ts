@@ -84,7 +84,7 @@ class Upgrade {
         this.button.style.width = "600px";
     }
     purchase(): void{
-      score -= this.cost;
+      mushroom -= this.cost;
       this.cost *= 1.15;
       globalRate.setRate();
       this.amount++;
