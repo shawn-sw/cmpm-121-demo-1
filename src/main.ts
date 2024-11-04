@@ -50,11 +50,11 @@ function updateGame(): void{
   const now = Date.now();
   const elapsed: number = (now - start) / 1000;
 
-  // 调用 continuousGrowth 的逻辑
+  // continuousGrowth
   incrementMushroom(growthManager.getGrowth() * elapsed);
   start = now;
 
-  // 调用 checkShowUpgrades 的逻辑
+  // checkShowUpgrades
   upgradeButtons.forEach((button) => {
     button.button.disabled = mushroom < button.price;
     button.updateButtonText();
@@ -175,4 +175,3 @@ availableItems.forEach((item) => {
   upgrade.button.disabled = true;
 });
 
-window.requestAnimationFrame(continuousGrowth);
