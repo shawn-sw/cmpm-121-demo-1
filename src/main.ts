@@ -46,15 +46,23 @@ function incrementMushroom(val: number = 1) {
 }
 
 let start = Date.now();
-function continuousGrowth() {
+function updateGame(): void{
   const now = Date.now();
-  const elapsed: number = now - start;
-    incrementMushroom(globalGrowth.growth * (elapsed / 1000));
-    start = now;
-    window.requestAnimationFrame(continuousGrowth);
-  }
-  window.requestAnimationFrame(continuousGrowth);
+  const elapsed: number = (now - start) / 1000;
 
+  // 调用 continuousGrowth 的逻辑
+  incrementMushroom(growthManager.getGrowth() * elapsed);
+  start = now;
+
+  // 调用 checkShowUpgrades 的逻辑
+  upgradeButtons.forEach((button) => {
+    button.button.disabled = mushroom < button.price;
+    button.updateButtonText();
+  });
+
+  window.requestAnimationFrame(updateGame);
+}
+window.requestAnimationFrame(updateGame);
 
 interface Item {
   name: string;
@@ -82,6 +90,24 @@ const globalGrowth = {
         this.growth = growthArr.reduce((a, b) => a + b, 0);
     }
 }
+
+class GrowthManager {
+  private growthRate = 0;
+
+  calculateGrowth(): void {
+    this.growthRate = upgradeButtons.reduce((total, button) => {
+      return total + button.amount * button.growth;
+    }, 0);
+  }
+
+  getGrowth(): number {
+    return this.growthRate;
+  }
+}
+
+const growthManager = new GrowthManager();
+
+const PRICE_MULTIPLIER = 1.15;
 
 class Upgrade {
     public name: string;
@@ -115,8 +141,8 @@ class Upgrade {
       if (mushroom >= this.price) {
       mushroom -= this.price;
       this.amount++;
-      this.price *= 1.15;
-      globalGrowth.setGrowth();
+      this.price *= PRICE_MULTIPLIER;
+      growthManager.calculateGrowth();
       this.updateButtonText();
       }
     }
@@ -149,13 +175,4 @@ availableItems.forEach((item) => {
   upgrade.button.disabled = true;
 });
 
-function checkShowUpgrades(): void {
-    upgradeButtons.forEach((button) => {
-      button.button.disabled = mushroom < button.price;
-      button.updateButtonText();
-    });
-    window.requestAnimationFrame(checkShowUpgrades);
-}
-
 window.requestAnimationFrame(continuousGrowth);
-window.requestAnimationFrame(checkShowUpgrades);
