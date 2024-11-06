@@ -1,11 +1,11 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Times New Roman, serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #B8BFEB;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,6 +13,27 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+@keyframes wiggle {
+  /* src = https://chat.brace.tools/s/94c7e2c4-16e2-485a-9217-1d21444fb27e */
+  0% {
+    transform: translateY(0em) rotate(0deg) skew(2deg, 1deg) scale(1);
+  }
+  25% {
+    transform: translateY(0.02em) rotate(2deg) scale(1.02);
+  }
+  50% {
+    transform: translateY(0em) rotate(0deg) skew(-2deg, -1deg) scale(1.03);
+  }
+  75% {
+    transform: translateY(0.02em) rotate(-2deg) scale(1.02);
+  }
+  100% {
+    transform: translateY(0em) rotate(0deg) skew(2deg, 1deg);
+  }
+}
+
+
 
 a {
   font-weight: 500;
