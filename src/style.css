@@ -57,6 +57,7 @@ h1 {
   line-height: 1.1;
   margin: 0;
   padding: 0;
+  animation: wiggle 1s infinite;
 }
 
 #app {
