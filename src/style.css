@@ -77,6 +77,7 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  animation: wiggle 1s infinite;
 }
 button:hover {
   border-color: #646cff;
@@ -89,7 +90,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: #B8BFEB;
   }
   a:hover {
     color: #747bff;
